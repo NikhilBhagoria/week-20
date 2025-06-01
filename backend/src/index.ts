@@ -17,3 +17,23 @@ app.post('/generate-otp', (req,res) =>{
     console.log(`OTP for ${email}: ${otp}`);
     res.status(200).json({message: "OTP generated and logged"});
 });
+
+
+// Endpoint to reset password
+app.post('/reset-password',(req,res)=>{
+    const  {email,otp, newPassword} =  req.body;
+    if(!email || !otp || !newPassword){
+        return res.status(400).json({message: "Email OTP, and new password are required"});
+    }
+    if(otpStore[email] === otp){
+        console.log(`Password for ${email} has been reset to: ${newPassword}`);
+        delete otpStore[email];
+        return res. status(200).json({message:"Password has been reset successfully"});
+    }else{
+        res.status(401).json({message:"Invalid OTP"});
+    }
+}); 
+
+app.listen(PORT, ()=>{
+    console.log(`Server running on http://localhost:${PORT}`);
+});
