@@ -5,6 +5,7 @@ const PORT = 3000;
 
 const otpStore : Record<string,string> = {};
 
+// Endpoint to generate and log OTP
 app.post('/generate-otp', (req,res) =>{
     const email = req.body.email;
     if(!email){
@@ -14,6 +15,7 @@ app.post('/generate-otp', (req,res) =>{
     const otp  = Math.floor(100000 + Math.random() * 900000).toString();
     otpStore[email] = otp;
 
+    // should send an email here
     console.log(`OTP for ${email}: ${otp}`);
     res.status(200).json({message: "OTP generated and logged"});
 });
@@ -27,7 +29,7 @@ app.post('/reset-password',(req,res)=>{
     }
     if(otpStore[email] === otp){
         console.log(`Password for ${email} has been reset to: ${newPassword}`);
-        delete otpStore[email];
+        delete otpStore[email]; // Clear the OTP after use 
         return res. status(200).json({message:"Password has been reset successfully"});
     }else{
         res.status(401).json({message:"Invalid OTP"});
